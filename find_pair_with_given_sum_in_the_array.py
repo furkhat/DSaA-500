@@ -67,7 +67,7 @@ if __name__ == '__main__':
         except AssertionError:
             print(arr)
             print(value)
-            print(find_naive(arr, value))
-            print(find_with_bisect(arr, value))
-            print(find_linear(arr, value))
+            print(naive)
+            print(with_bisect)
+            print(linear)
             break
