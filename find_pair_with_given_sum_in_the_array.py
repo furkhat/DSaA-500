@@ -15,7 +15,7 @@ def find_naive(arr, value):
     for i, arr_i in enumerate(arr):
         for j in range(i+1, len(arr)):
             if arr_i + arr[j] == value:
-                return i, j
+                return arr[i], arr[j]
 
 def find_with_bisect(arr, value):
     """O(nlogn) solution that uses sorting and binary search.
@@ -29,12 +29,12 @@ def find_with_bisect(arr, value):
     """
     arr = sorted(arr)
     for i, first in enumerate(arr):
-        j = bisect.bisect_right(arr, value - first)
-        second = arr[j]
-        if second + first == value:
-            return i, j
+        second = value - first
+        j = bisect.bisect_right(arr, second)
+        if j < len(arr) and j > 0 and j-1 != i and arr[j-1] == second:
+            return arr[i], arr[j-1]
 
-def find_lenear(arr, value):
+def find_linear(arr, value):
     """O(n) solution using has table.
 
     Args:
@@ -47,5 +47,27 @@ def find_lenear(arr, value):
     index_by_value = {}
     for i, first in enumerate(arr):
         if value - first in index_by_value:
-            return index_by_value[value - first], i
+            return value - first, arr[i]
         index_by_value[first] = i
+
+
+if __name__ == '__main__':
+    import random
+    for _ in range(100):
+        arr = [random.randint(0, 100) for _ in range(100)]
+        value = random.randint(0, 50)
+        try:
+            naive = find_naive(arr, value)
+            with_bisect = find_with_bisect(arr, value)
+            linear = find_linear(arr, value)
+            if all([naive, with_bisect, linear]):
+                assert sum(naive) == sum(with_bisect) == sum(linear) == value
+            else:
+                assert any([naive, with_bisect, linear]) == False
+        except AssertionError:
+            print(arr)
+            print(value)
+            print(find_naive(arr, value))
+            print(find_with_bisect(arr, value))
+            print(find_linear(arr, value))
+            break
