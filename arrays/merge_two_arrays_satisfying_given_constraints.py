@@ -29,10 +29,9 @@ def merge_linear(X, Y):
     """
     izerro = len(X) - 1
     for i in range(len(X) - 1, -1, -1):
-        while izerro >= 0 and X[izerro] != 0:
-            izerro -= 1
-        if X[i] != 0 and izerro > i:
+        if X[i] is not 0:
             X[i], X[izerro] = X[izerro], X[i]
+            izerro -= 1
 
     i = len(Y)
     j = 0
